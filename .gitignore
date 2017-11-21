@@ -12,8 +12,8 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
+#x64/	For future consideration on 64bit version
+#x86/  This is where the CyAPI.lib is placed, so it should be not excluded.
 build/
 bld/
 [Bb]in/
