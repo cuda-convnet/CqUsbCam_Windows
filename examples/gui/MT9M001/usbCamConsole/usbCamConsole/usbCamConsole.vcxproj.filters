@@ -16,66 +16,44 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="res\usbCamConsole.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\usbCamConsole.ico">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="usbCamConsole.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="usbCamConsoleDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CqUsbCam.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CyAPI.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DataCapture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DataProcess.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ImgFrame.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SensorCapbablity.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="tagSensor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="wqueue.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sensors\AR0135.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="sensors\MT9V034.h">
+    <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="usbCamConsole.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="usbCamConsoleDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CqUsbCam.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="DataCapture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="DataProcess.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="sensors\AR0135.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="sensors\MT9V034.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="usbCamConsole.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

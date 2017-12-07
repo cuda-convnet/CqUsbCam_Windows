@@ -21,6 +21,7 @@
 #include "Types.h"
 #include "./sensors/AR0135.h"
 #include "./sensors/MT9V034.h"
+#include "./sensors/MT9M001.h"
 #include <assert.h>
 
 
@@ -47,6 +48,7 @@ CCqUsbCam::CCqUsbCam(HANDLE h)
 
 	RegisterSensor_AR0135(m_sensorList);
 	RegisterSensor_MT9V034(m_sensorList);
+	RegisterSensor_MT9M001(m_sensorList);
 
 	m_pUsbHandle=new CCyUSBDevice(h);
 	assert(NULL!=m_pUsbHandle);
@@ -208,10 +210,11 @@ cq_int32_t CCqUsbCam::GetUsbSpeed(cq_uint32_t &chSpeedType)
 	if(false == m_bIsInterfaceClaimed)
 		return ERR_ITF_NOT_CLAIMED;
 
-	if (m_pUsbHandle->bHighSpeed == false)
-		return USB_SPEED_SUPER;
+	if (m_pUsbHandle->bHighSpeed == true)
+		chSpeedType=USB_SPEED_HIGH;
 	else
-		return USB_SPEED_HIGH;
+		chSpeedType=USB_SPEED_SUPER;
+	return 0;
 }
 
 
