@@ -317,7 +317,15 @@ cq_int32_t CCqUsbCam::SendUsbSpeed2Fpga(const cq_uint32_t chSpeedType)
 		return ERR_NULL_FUNC_POINTER;
 	return m_sensorInUse.SendUsbSpeed2Fpga(m_pUsbHandle, chSpeedType);
 }
+cq_int32_t CCqUsbCam::SoftTrig()
+{
+	if(false == m_bIsInterfaceClaimed)
+		return ERR_ITF_NOT_CLAIMED;
 
+    if(NULL==m_sensorInUse.SoftTrig)
+		return ERR_NULL_FUNC_POINTER;
+	return m_sensorInUse.SoftTrig(m_pUsbHandle);
+}
 cq_int32_t CCqUsbCam::WrSensorReg(const cq_uint32_t iAddr, const cq_uint32_t iValue)
 {
 	if(false == m_bIsInterfaceClaimed)

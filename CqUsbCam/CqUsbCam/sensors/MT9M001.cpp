@@ -266,14 +266,14 @@ static cq_int32_t MT9M001_SetTrigMode(CCyUSBDevice *pUsbHandle, const cq_uint32_
 			break;
 		case TRIGMODE_FPGA:
 			MT9M001_WrSensorReg(pUsbHandle, 0x1E, 0x0300);
-			MT9M001_WrFpgaReg(pUsbHandle, 0x05, 0x01);// 0x01 by default
+			MT9M001_WrFpgaReg(pUsbHandle, 0x00, 0x01);// 0x01 by default
 			break;
 		case TRIGMODE_SOFT:
 			MT9M001_WrSensorReg(pUsbHandle, 0x1E, 0x0300);
 			MT9M001_WrFpgaReg(pUsbHandle, 0x00, 0x02);
 			break;
 		case TRIGMODE_SIGNAL:
-			MT9M001_WrSensorReg(pUsbHandle, 0x1E, 0x0200);
+			MT9M001_WrSensorReg(pUsbHandle, 0x1E, 0x0300);
 			MT9M001_WrFpgaReg(pUsbHandle, 0x00, 0x03);
 		default:
 			break;

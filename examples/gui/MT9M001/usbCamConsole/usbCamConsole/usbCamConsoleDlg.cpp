@@ -619,7 +619,7 @@ void CusbCamConsoleDlg::OnBnClickedButtonSoftTrig()
 		SetDlgItemText(IDC_STATIC_STATUS, L"USBÎ´´ò¿ª¡£");
 		return;
 	}
-	//(m_bIsCamSelected ? m_sensorInUse->SoftTrig(): NULL);
+	(m_bIsCamSelected ? m_sensorInUse->SoftTrig(): NULL);
 	SetDlgItemText(IDC_STATIC_STATUS, L"Soft´¥·¢¡£");
 }
 

@@ -107,6 +107,8 @@ private:
 
 	cq_int32_t SendUsbSpeed2Fpga(const cq_uint32_t chSpeedType);
 
+	cq_int32_t SoftTrig();
+
 	void GetRecvByteCnt(cq_uint64_t& byteCnt);
 	void ClearRecvByteCnt();
 	void GetRecvFrameCnt(cq_uint64_t& frameCnt);
