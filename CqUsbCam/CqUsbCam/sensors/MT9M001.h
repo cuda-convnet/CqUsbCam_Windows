@@ -1,5 +1,5 @@
-#ifndef _SENSORCAPBABLITY_H_
-#define _SENSORCAPBABLITY_H_
+#ifndef _MY9M001_H_
+#define _MY9M001_H_
 
 /****************************************************************************************\
  * This is the header file for the Caiqi usb camera for Linux/Mac						*
@@ -15,38 +15,16 @@
  *                                                                                	*
  \***************************************************************************************/
 
+#include <stdio.h>
+#include <string>
+#include <list>
 
- #define RESOLU_1280_720 				0x80
- #define RESOLU_1280_960 				0x81
- #define RESOLU_640_480_SKIP 				0x82
- #define RESOLU_640_480_BIN 				0x83
- #define RESOLU_640_480 				0x84
- #define RESOLU_752_480 				0x85
- #define RESOLU_1280_1024 				0x86
- 
- #define TRIGMODE_AUTO					0x90
- #define TRIGMODE_FPGA					0x91
- #define TRIGMODE_SOFT					0x92  
- #define TRIGMODE_SIGNAL				0x93
-  
- #define ANALOGGAIN_1X					0x98
- #define ANALOGGAIN_2X					0x99
- #define ANALOGGAIN_4X					0x9A
- #define ANALOGGAIN_8X					0x9B  
- 
- #define USBTYPE_20						0xA0
- #define USBTYPE_30						0xA1 
+#include "../Types.h"
+//#include "../cyusb.h"
+#include "../tagSensor.h"
 
- 
- #define MIRROR_NORMAL					0xA8
- #define MIRROR_X						0xA9
- #define MIRROR_Y						0xAA
- #define MIRROR_XY						0xAB
- 
- #define BITDEPTH_8						0xAC
- #define BITDEPTH_16					0xAD 
- #define BITDEPTH_16_2					0xAE 
 
+void RegisterSensor_MT9M001(list<tagSensor>& sensorList);
 
 
 #endif

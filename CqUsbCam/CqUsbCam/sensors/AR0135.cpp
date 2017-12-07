@@ -506,8 +506,10 @@ static tagSensor sensor_AR0135=
 	NULL
 };
 
+#if 1
 void RegisterSensor_AR0135(list<tagSensor>& sensorList)
 {
 	sensorList.push_back(sensor_AR0135);
 }
 
+#endif 

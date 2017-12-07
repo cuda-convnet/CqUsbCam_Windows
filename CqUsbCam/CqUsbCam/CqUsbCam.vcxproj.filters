@@ -77,5 +77,8 @@
     <ClCompile Include="sensors\MT9V034.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="sensors\MT9M001.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
