@@ -84,12 +84,17 @@ static cq_int32_t MT9M001_RdSensorReg(CCyUSBDevice *pUsbHandle, const cq_uint32_
 
 static cq_int32_t MT9M001_WrEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, const cq_uint8_t iValue)
 {
-	cq_int32_t len=2;
-	cq_uint8_t data[10]={'0'};//no use, just to make firmware happy
-	cq_uint16_t tempAddr= iAddr&0xffff;
-	cq_uint16_t tempValue= iValue&0xff;
-	//cyusb_control_write(pUsbHandle,0x40,0xf5,tempValue,tempAddr,data,len,100);
-	return len;
+	USB_ORDER		sUsbOrder;
+	cq_uint8_t		chData[64];
+
+	sUsbOrder.pData=chData;
+	sUsbOrder.ReqCode = 0xF5;
+	sUsbOrder.DataBytes = 2;
+	sUsbOrder.Direction = 0;
+	sUsbOrder.Index = iAddr&0xff;
+	sUsbOrder.Value = iValue&0xff;
+
+	return SendOrder(pUsbHandle, &sUsbOrder);
 }
 static cq_int32_t MT9M001_RdEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_int32_t &length)
 {
