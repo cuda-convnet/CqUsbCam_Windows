@@ -82,66 +82,35 @@ static cq_int32_t MT9M001_RdSensorReg(CCyUSBDevice *pUsbHandle, const cq_uint32_
 	return r;
 }
 
+#if 0
 static cq_int32_t MT9M001_WrEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, const cq_uint8_t iValue)
 {
-	USB_ORDER		sUsbOrder;
-	cq_uint8_t		chData[64];
 
-	sUsbOrder.pData=chData;
-	sUsbOrder.ReqCode = 0xF5;
-	sUsbOrder.DataBytes = 2;
-	sUsbOrder.Direction = 0;
-	sUsbOrder.Index = iAddr&0xff;
-	sUsbOrder.Value = iValue&0xff;
-
-	return SendOrder(pUsbHandle, &sUsbOrder);
 }
 static cq_int32_t MT9M001_RdEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_int32_t &length)
 {
-	cq_int32_t transferred=length;
-	cq_uint16_t tempAddr= iAddr&0xffff;
-	cq_int32_t r=0;
-    //cq_int32_t r=cyusb_control_read(pUsbHandle,0x40,0xf6,0x0, tempAddr, buffer, transferred,100);
-	return r;
+
 	
 }
 static cq_int32_t MT9M001_WrDevID(CCyUSBDevice *pUsbHandle, cq_uint8_t* chIdBuf, cq_uint32_t &length )
 {
-	int len=1;
-	cq_int32_t r=0;
-    //int r= cyusb_control_write(pUsbHandle,0x40,0xd0,0x0,0x0, chIdBuf,len,100);
-	length=len;
-	return r;
+
 }
 static cq_int32_t MT9M001_RdDevID(CCyUSBDevice *pUsbHandle, cq_uint8_t *chIdBuf, cq_uint32_t &length)
 {
-	int len=1;
-	unsigned char buf[10]={'0'};
-	cq_int32_t r=0;
-    //int r= cyusb_control_read(pUsbHandle,0x40,0xd1,0x0,0x0, buf, len,100);
-	memcpy(chIdBuf, buf, len);
-	length=len;
-	return r;
+
 }
 
 static cq_int32_t MT9M001_WrDevSN(CCyUSBDevice *pUsbHandle, cq_uint8_t* chSnBuf, cq_uint32_t &length )
 {
-	int len=4;
-	cq_int32_t r=0;
-    //int r= cyusb_control_write(pUsbHandle,0x40,0xd2,0x0,0x0, chSnBuf,len,100);
-	length=len;
-	return r;
+
 }
 static cq_int32_t MT9M001_RdDevSN(CCyUSBDevice *pUsbHandle, cq_uint8_t *chSnBuf, cq_uint32_t &length)
 {
-	int len=4;
-	unsigned char buf[10]={'0'};
-	cq_int32_t r=0;
-    //int r= cyusb_control_read(pUsbHandle,0x40,0xd3,0x0,0x0, buf, len,100);
-	memcpy(chSnBuf, buf, len);
-	length=len;
-	return r;
+
 }
+#endif
+
 static cq_int32_t MT9M001_WrFpgaReg(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, const cq_uint32_t iValue)
 {
     cq_uint8_t data[10]={'0'};//no use, just to make firmware happy
@@ -464,12 +433,13 @@ static tagSensor sensor_MT9M001=
 	MT9M001_StopCap,
 	MT9M001_SendUsbSpeed2Fpga,
 
-	MT9M001_WrEeprom,
-	MT9M001_RdEeprom,
-	MT9M001_WrDevID,
-	MT9M001_RdDevID,
-	MT9M001_WrDevSN,
-	MT9M001_RdDevSN,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+
 	MT9M001_SoftTrig
 };
 void RegisterSensor_MT9M001(list<tagSensor>& sensorList)

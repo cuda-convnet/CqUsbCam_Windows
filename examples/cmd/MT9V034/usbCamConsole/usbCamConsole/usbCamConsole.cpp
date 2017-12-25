@@ -137,7 +137,7 @@ void  Disp(LPVOID lpParam)
 	cv::Mat frame(g_iHeight, g_iWidth, (g_byteBitDepthNo==1? CV_8UC1: CV_16UC1) ,pDataBuffer);
 	
 	//WaitForSingleObject(g_mutexDisp, INFINITE); 
-	cv::imshow("disp",frame);
+	//cv::imshow("disp",frame);
 	//ReleaseMutex(g_mutexDisp);
 }
 

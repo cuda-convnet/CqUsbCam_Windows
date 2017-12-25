@@ -802,7 +802,6 @@ void CusbCamConsoleDlg::OnBnClickedButtonCheckSpeed()
 void CusbCamConsoleDlg::OnBnClickedButtonWrEeprom()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
@@ -810,65 +809,59 @@ void CusbCamConsoleDlg::OnBnClickedButtonWrEeprom()
 	}
 	CString strAddr, strValue;
 
-	GetDlgItemText(IDC_EDIT_FPGA_REGISTER_ADDR, strAddr);
-	GetDlgItemText(IDC_EDIT_FPGA_REGISTER_VALUE, strValue);
+	GetDlgItemText(IDC_EDIT_EEPROM_ADDR, strAddr);
+	GetDlgItemText(IDC_EDIT_EEPROM_VALUE, strValue);
 
-	WORD iAddr = str2hex(strAddr);
-	WORD iValue = str2hex(strValue);
+	cq_uint16_t iAddr = str2hex(strAddr);
+	cq_uint16_t iValue = str2hex(strValue);
 
-	m_sensorInUse->WrEEPROM(iAddr, iValue);
+	m_sensorInUse->WrEeprom(iAddr, iValue);
 	SetDlgItemText(IDC_STATIC_STATUS, L"写EEPROM。");
-#endif
 }
 
 
 void CusbCamConsoleDlg::OnBnClickedButtonRdEeprom()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
 		return;
 	}
 	CString strAddr;
-	GetDlgItemText(IDC_EDIT_FPGA_REGISTER_ADDR, strAddr);
-	WORD iAddr = str2hex(strAddr);
-	unsigned char irxval;
-	int len=1;
-	m_sensorInUse->RdEEPROM(iAddr,&irxval,len);
+	GetDlgItemText(IDC_EDIT_EEPROM_ADDR, strAddr);
+	cq_uint32_t iAddr = str2hex(strAddr);
+	cq_uint8_t irxval;
+	cq_uint32_t len=1;
+	m_sensorInUse->RrEeprom(iAddr, &irxval,len);
 	CString s_temp;
 	s_temp.Format(_T("%02x"), irxval);
-	SetDlgItemText(IDC_EDIT_FPGA_REGISTER_VALUE, s_temp);
+	SetDlgItemText(IDC_EDIT_EEPROM_VALUE, s_temp);
 	SetDlgItemText(IDC_STATIC_STATUS, L"读EEPROM。");
-#endif
 }
 
 
 void CusbCamConsoleDlg::OnBnClickedButtonRdDevId()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
 		return;
 	}
 	CString strValue;
-	unsigned char iValue = 0;
-	int len=1;
-	m_sensorInUse->RdDeviceID(&iValue,len);
+	cq_uint8_t iValue = 0;
+	cq_uint32_t len=1;
+	m_sensorInUse->RdDevID(&iValue,len);
 	strValue.Format(_T("%02x"), iValue);
 	SetDlgItemText(IDC_EDIT_DEVID, strValue);
 	SetDlgItemText(IDC_STATIC_STATUS, L"读ID成功。");
-#endif
 }
 
 
 void CusbCamConsoleDlg::OnBnClickedButtonWrDevId()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
@@ -876,42 +869,40 @@ void CusbCamConsoleDlg::OnBnClickedButtonWrDevId()
 	}
 	CString strValue;
 	GetDlgItemText(IDC_EDIT_DEVID, strValue);
-	unsigned char iValue = str2hex(strValue);
-	int len=1;
-	m_sensorInUse->WrDeviceID(&iValue,len);
+	cq_uint8_t iValue = str2hex(strValue);
+	cq_uint32_t len=1;
+	m_sensorInUse->WrDevID(&iValue,len);
 	SetDlgItemText(IDC_STATIC_STATUS, L"设置ID成功。");
-#endif
+
 }
 
 
 void CusbCamConsoleDlg::OnBnClickedButtonRdDevSn()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
 		return;
 	}
 	CString strValue;
-	unsigned char iValue[4] = {0};
-	int len=4;
-	m_sensorInUse->RdDeviceSN(iValue,len);
-	int temp=iValue[0]<<8*0;
+	cq_uint8_t iValue[4] = {0};
+	cq_uint32_t len=4;
+	m_sensorInUse->RdDevSN(iValue,len);
+	cq_int32_t temp=iValue[0]<<8*0;
 	temp+=iValue[1]<<8*1;
 	temp+=iValue[2]<<8*2;
 	temp+=iValue[3]<<8*3;
 	strValue.Format(_T("%02x"), temp);
 	SetDlgItemText(IDC_EDIT_SN, strValue);
 	SetDlgItemText(IDC_STATIC_STATUS, L"读SN成功。");
-#endif
+
 }
 
 
 void CusbCamConsoleDlg::OnBnClickedButtonWrDevSn()
 {
 	// TODO: 在此添加控件通知处理程序代码
-#if 0
 	if (!m_bUsbOpen)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"USB未打开。");
@@ -919,14 +910,13 @@ void CusbCamConsoleDlg::OnBnClickedButtonWrDevSn()
 	}
 	CString strValue;
 	GetDlgItemText(IDC_EDIT_SN, strValue);
-	int temp = str2hex(strValue);
-	unsigned char iValue[4]={0};
+	cq_int32_t temp = str2hex(strValue);
+	cq_uint8_t iValue[4]={0};
 	iValue[0]=(temp>>8*0)&0xff;
 	iValue[1]=(temp>>8*1)&0xff;
 	iValue[2]=(temp>>8*2)&0xff;
 	iValue[3]=(temp>>8*3)&0xff;
-	int len=4;
-	m_sensorInUse->WrDeviceSN(iValue,len);
+	cq_uint32_t len=4;
+	m_sensorInUse->WrDevSN(iValue,len);
 	SetDlgItemText(IDC_STATIC_STATUS, L"设置SN成功。");
-#endif
 }

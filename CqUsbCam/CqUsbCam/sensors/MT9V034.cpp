@@ -57,99 +57,98 @@ static cq_int32_t MT9V034_WrSensorReg(CCyUSBDevice *pUsbHandle, const cq_uint32_
 	m_sUsbOrder.Value = iValue&0xffff;
 
 	return SendOrder(pUsbHandle, &m_sUsbOrder);
-
-    //return cyusb_control_write(pUsbHandle, 0x40, 0xf1, tempValue, tempAddr, data, 2, 100);
 }
 
 
 static cq_int32_t MT9V034_RdSensorReg(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, cq_uint32_t &iValue)
 {
-	cq_uint8_t tempAddr= iAddr&0xff;
-	cq_uint8_t tempValue[2]={'0'};
-	cq_int32_t r=0;
-	//cq_int32_t r=cyusb_control_read(pUsbHandle, 0x40, 0xf2,0x0, tempAddr, tempValue, 2, 100);
-	iValue = tempValue[0] << 8;
-	iValue += tempValue[1];
+	USB_ORDER     sUsbOrder;
+	cq_uint8_t  chData[64];
+
+	chData[0] = '0';
+	chData[1] = '0';
+
+	sUsbOrder.pData=chData;
+	sUsbOrder.ReqCode = 0xF2;
+	sUsbOrder.DataBytes = 2;
+	sUsbOrder.Direction = ORDER_IN;
+	sUsbOrder.Index = iAddr&0xff;
+
+	cq_int32_t r=SendOrder(pUsbHandle, &sUsbOrder);
+
+	cq_uint8_t rxval[2];
+	memcpy(rxval, chData, 2);
+	cq_uint16_t irxval = rxval[0] << 8;
+	irxval += rxval[1];
+
+	iValue=irxval;
 	return r;
 }
 
+#if 0
 static cq_int32_t MT9V034_WrEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, const cq_uint8_t iValue)
 {
-	cq_int32_t len=2;
-	cq_uint8_t data[10]={'0'};//no use, just to make firmware happy
-	cq_uint16_t tempAddr= iAddr&0xffff;
-	cq_uint16_t tempValue= iValue&0xff;
-	//cyusb_control_write(pUsbHandle,0x40,0xf5,tempValue,tempAddr,data,len,100);
-	return len;
+
 }
 static cq_int32_t MT9V034_RdEeprom(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_int32_t &length)
 {
-#if 0
-	int len=1;
-	byte readbuff[1];
-	usbOrderWrapper(0xD1,ORDER_IN,0,0,readbuff,len);
-	memcpy(buff,readbuff,len);
-	length=len;
-	return len;
-#endif
-	return 0;
+
 }
 static cq_int32_t MT9V034_WrDevID(CCyUSBDevice *pUsbHandle, cq_uint8_t* chIdBuf, cq_uint32_t &length )
 {
-	int len=1;
-	cq_int32_t r=0;
-    //int r= cyusb_control_write(pUsbHandle,0x40,0xd0,0x0,0x0, chIdBuf,len,100);
-	length=len;
-	return r;
+
 }
 static cq_int32_t MT9V034_RdDevID(CCyUSBDevice *pUsbHandle, cq_uint8_t *chIdBuf, cq_uint32_t &length)
 {
-	int len=1;
-	unsigned char buf[10]={'0'};
-	cq_int32_t r=0;
-    //int r= cyusb_control_read(pUsbHandle,0x40,0xd1,0x0,0x0, buf, len,100);
-	memcpy(chIdBuf, buf, len);
-	length=len;
-	return r;
+
 }
 
 static cq_int32_t MT9V034_WrDevSN(CCyUSBDevice *pUsbHandle, cq_uint8_t* chSnBuf, cq_uint32_t &length )
 {
-	int len=4;
-	cq_int32_t r=0;
-    //int r= cyusb_control_write(pUsbHandle,0x40,0xd2,0x0,0x0, chSnBuf,len,100);
-	length=len;
-	return r;
+
 }
 static cq_int32_t MT9V034_RdDevSN(CCyUSBDevice *pUsbHandle, cq_uint8_t *chSnBuf, cq_uint32_t &length)
 {
-	int len=4;
-	unsigned char buf[10]={'0'};
-	cq_int32_t r=0;
-    //int r= cyusb_control_read(pUsbHandle,0x40,0xd3,0x0,0x0, buf, len,100);
-	memcpy(chSnBuf, buf, len);
-	length=len;
-	return r;
+
 }
+#endif
+
 static cq_int32_t MT9V034_WrFpgaReg(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, const cq_uint32_t iValue)
 {
-    cq_uint8_t data[10]={'0'};//no use, just to make firmware happy
-	cq_uint8_t tempAddr= iAddr&0xff;
-	cq_uint8_t tempValue= iValue&0xff;
-	cq_int32_t r=0;
-    //return cyusb_control_write(pUsbHandle, 0x40, 0xf3, tempValue, tempAddr, data, 1, 100);
-	return r;
+	USB_ORDER     sUsbOrder;
+	cq_uint8_t  chData[64];
+
+	sUsbOrder.pData=chData;
+	sUsbOrder.ReqCode = 0xF3; 
+	sUsbOrder.DataBytes = 1;
+	sUsbOrder.Direction = ORDER_OUT;
+	sUsbOrder.Index = iAddr&0xff;
+	sUsbOrder.Value = iValue&0xff;
+
+	return SendOrder(pUsbHandle, &sUsbOrder);
 }
 
 
 static cq_int32_t MT9V034_RdFpgaReg(CCyUSBDevice *pUsbHandle, const cq_uint32_t iAddr, cq_uint32_t &iValue)
 {
-	cq_uint8_t tempAddr= iAddr&0xff;
-	cq_uint8_t tempValue[1]={'0'};
-	cq_int32_t r=0;
-    //cq_int32_t r=cyusb_control_read(pUsbHandle, 0x40, 0xf4, 0x0, tempAddr, tempValue, 1, 100);
-	iValue=tempValue[0];
-	return r;
+	USB_ORDER     sUsbOrder;
+	cq_uint8_t  chData[64];
+
+	chData[0] = '0';
+
+	sUsbOrder.pData=chData;
+	sUsbOrder.ReqCode = 0xF4;
+	sUsbOrder.DataBytes = 1;
+	sUsbOrder.Direction = ORDER_IN;
+	sUsbOrder.Index = iAddr&0xff;
+
+	SendOrder(pUsbHandle, &sUsbOrder);
+
+	cq_uint8_t rxval[1];
+	memcpy(rxval, chData, 1);
+	cq_uint8_t irxval = rxval[0];
+	iValue=irxval;
+	return irxval;
 }
 /*
 static cq_int32_t MT9V034_InitSensor(CCyUSBDevice *pUsbHandle)
@@ -274,7 +273,7 @@ static cq_int32_t MT9V034_SetGainValue(CCyUSBDevice *pUsbHandle, const cq_uint32
     cq_int32_t r=MT9V034_WrSensorReg(pUsbHandle, 0x35, iGainVal&0xffff);
     return r;
 }
-#if 0 //no such function
+
 static cq_int32_t MT9V034_SetAutoGainExpo(CCyUSBDevice *pUsbHandle, const cq_bool_t bIsAutoGain, const cq_bool_t bIsAutoExpo)
 {
     if((bIsAutoGain==true)&&(bIsAutoExpo==true))
@@ -290,8 +289,6 @@ static cq_int32_t MT9V034_SetAutoGainExpo(CCyUSBDevice *pUsbHandle, const cq_boo
        return MT9V034_WrSensorReg(pUsbHandle, 0xAF, 0x0000);
 	return -99;//should never reach here
 }
-
-#endif
 
 static cq_int32_t MT9V034_SetResolution(CCyUSBDevice *pUsbHandle, const cq_uint32_t chResoluType)
 {
@@ -420,7 +417,7 @@ static tagSensor sensor_MT9V034=
 */
 static tagSensor sensor_MT9V034=
 {
-	"MT9MV034",
+	"MT9V034",
 	0xf0,
 	1,
 	2,
@@ -435,7 +432,7 @@ static tagSensor sensor_MT9V034=
 	MT9V034_SetTrigMode,
 	MT9V034_SetExpoValue,
 	MT9V034_SetGainValue,
-	NULL,
+	MT9V034_SetAutoGainExpo,
 	MT9V034_SetResolution,
 	MT9V034_SetMirrorType,
 	NULL,
@@ -443,12 +440,13 @@ static tagSensor sensor_MT9V034=
 	MT9V034_StopCap,
 	MT9V034_SendUsbSpeed2Fpga,
 
-	MT9V034_WrEeprom,
-	MT9V034_RdEeprom,
-	MT9V034_WrDevID,
-	MT9V034_RdDevID,
-	MT9V034_WrDevSN,
-	MT9V034_RdDevSN,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+
 	MT9V034_SoftTrig
 };
 void RegisterSensor_MT9V034(list<tagSensor>& sensorList)

@@ -12,7 +12,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-
+using namespace std;
+using namespace cv;
 
 #define MAIN_RESOLU_SELECT	 		'a'
 #define MAIN_RESOLU_752_480 		'0'
@@ -86,6 +87,7 @@ cq_uint8_t	g_byteResolutionType;
 
 HANDLE g_mutexDisp;
 HANDLE g_mutexTimer;
+Mat frame(g_iHeight, g_iWidth, CV_8UC1);
 
 CCqUsbCam *pCamInUse=new CCqUsbCam(NULL);
 
@@ -132,19 +134,14 @@ void checkspeed()
 
 void  Disp(LPVOID lpParam)
 {
-	int i = 0, j = 0, k = 0;
-	cq_uint8_t *pDataBuffer = (cq_uint8_t*)lpParam;
-	cv::Mat frame(g_iHeight, g_iWidth, (g_byteBitDepthNo==1? CV_8UC1: CV_16UC1) ,pDataBuffer);
-	
-	//WaitForSingleObject(g_mutexDisp, INFINITE); 
-	cv::imshow("disp",frame);
-	//ReleaseMutex(g_mutexDisp);
+	WaitForSingleObject(g_mutexDisp, INFINITE); 
+	frame.data=(cq_uint8_t*)lpParam;
+	ReleaseMutex(g_mutexDisp);
 }
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-
 
 	std::string sensorName = "AR0135";
 	pCamInUse->SelectSensor(&sensorName);
@@ -163,7 +160,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("init sensor done\n");
 
 	checkspeed();
+	cv::namedWindow("disp",CV_WINDOW_AUTOSIZE | CV_GUI_NORMAL);
+	pCamInUse->StartCap(g_iHeight, (g_byteBitDepthNo == 1 ? g_iWidth : g_iWidth * 2), Disp);
+	while(1)
+	{
+		WaitForSingleObject(g_mutexDisp, INFINITE); 
+		imshow("disp", frame);
+		waitKey(1);
+		ReleaseMutex(g_mutexDisp);
+	}
+	
+#if 0
+	Mat MyImage=imread("D:/Cq SDK/CqUsbCam_Windows/examples/gui/AR013x/usbCamConsole/Debug/DOTA.jpg");
+	if(!MyImage.data){
+		cout<<"读取不到图片"<<endl;
+		return 0;
+	}
+	namedWindow("小黑");
 
+	imshow("小黑",MyImage);
+	waitKey(0);
+	//return 1;
+#endif
+
+#if 0
 	while(1)
 	{
 		printf("Please input your choice ...\n");
@@ -190,6 +210,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				\n\
 				\'z\':	Exit\n"\
 		);
+
 		char ch=getchar();
 		getchar();
 		printf("Your choice is %c\n", ch);
@@ -199,8 +220,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				printf("Please input your choice ...\n");
 				printf("\
-						\'0\':	1280x720\n\
-						\'1\':	1280x960\n\
+						\'5\':	1280x720\n\
+						\'6\':	1280x960\n\
 						\'2\':	640x480 in skip mode\n\
 						\'3\':	640x480 in binning mode\n"\
 				);
@@ -378,25 +399,29 @@ int _tmain(int argc, _TCHAR* argv[])
 			case MAIN_CAPTURE:
 			{
 				cv::namedWindow("disp",CV_WINDOW_AUTOSIZE | CV_GUI_NORMAL);
-				HWND hWnd = (HWND)cvGetWindowHandle("disp");//获取子窗口的HWND
-				HWND hParentWnd = ::GetParent(hWnd);//获取父窗口HWND。父窗口是我们要用的
-				long style = GetWindowLong(hParentWnd, GWL_STYLE);
-				style &= ~(WS_SYSMENU);
-				SetWindowLong(hParentWnd, GWL_STYLE, style);
+				//HWND hWnd = (HWND)cvGetWindowHandle("disp");//获取子窗口的HWND
+				//HWND hParentWnd = ::GetParent(hWnd);//获取父窗口HWND。父窗口是我们要用的
+				//long style = GetWindowLong(hParentWnd, GWL_STYLE);
+				//style &= ~(WS_SYSMENU);
+				//SetWindowLong(hParentWnd, GWL_STYLE, style);
 
 				pCamInUse->StartCap(g_iHeight, (g_byteBitDepthNo == 1 ? g_iWidth : g_iWidth * 2), Disp);
 
 				//signal(SIGALRM, timerFunction);
 				//alarm(1);
 
+#if 0
 				printf("Press any key to stop capturing\n");
 				
 
 				getchar();
-				WaitForSingleObject(g_mutexTimer, INFINITE);
+				printf("getcahr 1\n");
+				getchar();
+				//WaitForSingleObject(g_mutexTimer, INFINITE);
 				//alarm(0);
 				pCamInUse->StopCap();
-				ReleaseMutex(g_mutexTimer);
+				printf("stop cap\n");
+				//ReleaseMutex(g_mutexTimer);
 				
 				WaitForSingleObject(g_mutexDisp, INFINITE);
 				cv::destroyWindow("disp");
@@ -405,10 +430,8 @@ int _tmain(int argc, _TCHAR* argv[])
 				cv::waitKey(1);
 				cv::waitKey(1);
 				ReleaseMutex(g_mutexDisp);
-				break;
-				
-
-
+				printf("destroy window\n");
+#endif
 				break;
 			}
 			case MAIN_ANALOG_GAIN_AUTO_TRIG:
@@ -541,6 +564,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 
 	}
+#endif
+	while(1);
 	return 0;
 }
 

@@ -59,10 +59,12 @@ CCqUsbCam::CCqUsbCam(HANDLE h)
 	m_sensorInUse=*m_sensorList.begin();
 #endif
 }
+
 CCqUsbCam::~CCqUsbCam()
 {
 	delete m_pUsbHandle;
 }
+
 cq_bool_t CCqUsbCam::Reset()
 {
 	m_pUsbHandle->ControlEndPt->Reset();
@@ -73,6 +75,7 @@ cq_bool_t CCqUsbCam::Reset()
 	//m_pUsbHandle->Reset();
 	return 0;
 }
+
 cq_int32_t  CCqUsbCam::SelectSensor(string* pStrSensorName)
 {
 	assert(NULL!=pStrSensorName);
@@ -203,7 +206,119 @@ cq_int32_t  CCqUsbCam::StopCap()
 	return 0;
 }
 
+static cq_int32_t SendOrder(CCyUSBDevice *pUsbHandle, PUSB_ORDER pOrder )
+{
+	if(pUsbHandle!=NULL&&pUsbHandle->IsOpen())
+	{
+		pUsbHandle->ControlEndPt->Target=(CTL_XFER_TGT_TYPE)pOrder->Target;
+		pUsbHandle->ControlEndPt->ReqType=(CTL_XFER_REQ_TYPE)pOrder->ReqType;
+		pUsbHandle->ControlEndPt->Direction=(CTL_XFER_DIR_TYPE)pOrder->Direction;
+		pUsbHandle->ControlEndPt->ReqCode=pOrder->ReqCode;
+		pUsbHandle->ControlEndPt->Value=pOrder->Value;
+		pUsbHandle->ControlEndPt->Index=pOrder->Index;
 
+		cq_int64_t lBytes=0;
+		lBytes=pOrder->DataBytes;
+		if(pUsbHandle->ControlEndPt->XferData((cq_uint8_t*)(pOrder->pData),lBytes))
+		{
+			pOrder->DataBytes=lBytes;
+			return 0;
+		}
+		pOrder->DataBytes=0;
+	}
+	return -1;
+}
+
+cq_int32_t CCqUsbCam::WrDevID(cq_uint8_t* chIdBuf, cq_uint32_t &length )
+{
+	USB_ORDER		sUsbOrder;
+
+	sUsbOrder.pData=chIdBuf;
+	sUsbOrder.ReqCode = 0xD0;
+	sUsbOrder.DataBytes = length;
+	sUsbOrder.Direction = 0;
+	sUsbOrder.Index = 0;
+	sUsbOrder.Value = 0;
+
+	cq_int32_t ret = SendOrder(m_pUsbHandle, &sUsbOrder);
+	length = sUsbOrder.DataBytes;
+	return ret;
+}
+cq_int32_t CCqUsbCam::RdDevID(cq_uint8_t *chIdBuf, cq_uint32_t &length)
+{
+	USB_ORDER		sUsbOrder;
+
+	sUsbOrder.pData=chIdBuf;
+	sUsbOrder.ReqCode = 0xD1;
+	sUsbOrder.DataBytes = length;
+	sUsbOrder.Direction = 1;
+	sUsbOrder.Index = 0;
+	sUsbOrder.Value = 0;
+
+	cq_int32_t ret = SendOrder(m_pUsbHandle, &sUsbOrder);
+	length=sUsbOrder.DataBytes;
+	return ret;
+}
+
+cq_int32_t CCqUsbCam::WrDevSN(cq_uint8_t* chSnBuf, cq_uint32_t &length )
+{
+	USB_ORDER		sUsbOrder;
+
+	sUsbOrder.pData=chSnBuf;
+	sUsbOrder.ReqCode = 0xD2;
+	sUsbOrder.DataBytes = length;
+	sUsbOrder.Direction = 0;
+	sUsbOrder.Index = 0;
+	sUsbOrder.Value = 0;
+
+	cq_int32_t ret = SendOrder(m_pUsbHandle, &sUsbOrder);
+	length = sUsbOrder.DataBytes;
+	return ret;
+}
+cq_int32_t CCqUsbCam::RdDevSN(cq_uint8_t *chSnBuf, cq_uint32_t &length)
+{
+	USB_ORDER		sUsbOrder;
+
+	sUsbOrder.pData=chSnBuf;
+	sUsbOrder.ReqCode = 0xD3;
+	sUsbOrder.DataBytes = length;
+	sUsbOrder.Direction = 1;
+	sUsbOrder.Index = 0;
+	sUsbOrder.Value = 0;
+
+	cq_int32_t ret = SendOrder(m_pUsbHandle, &sUsbOrder);
+	length=sUsbOrder.DataBytes;
+	return ret;
+}
+cq_int32_t CCqUsbCam::WrEeprom(const cq_uint32_t iAddr, const cq_uint8_t iValue)
+{
+	USB_ORDER		sUsbOrder;
+	cq_uint8_t		chData[64];
+
+	sUsbOrder.pData=chData;
+	sUsbOrder.ReqCode = 0xF5;
+	sUsbOrder.DataBytes = 2;
+	sUsbOrder.Direction = 0;
+	sUsbOrder.Index = iAddr&0xffff;
+	sUsbOrder.Value = iValue&0xffff;
+
+	return SendOrder(m_pUsbHandle, &sUsbOrder);
+}
+cq_int32_t CCqUsbCam::RrEeprom(const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_uint32_t &length)
+{
+	USB_ORDER		sUsbOrder;
+
+	sUsbOrder.pData = buffer;
+	sUsbOrder.ReqCode = 0xF6;
+	sUsbOrder.DataBytes = length;
+	sUsbOrder.Direction = 1;
+	sUsbOrder.Index = iAddr&0xffff;
+	sUsbOrder.Value = 0;
+
+	cq_int32_t ret = SendOrder(m_pUsbHandle, &sUsbOrder);
+	length=sUsbOrder.DataBytes;
+	return ret;
+}
 
 cq_int32_t CCqUsbCam::GetUsbSpeed(cq_uint32_t &chSpeedType)
 {
@@ -387,7 +502,6 @@ void CCqUsbCam::ClearRecvFrameCnt()
 	assert(NULL!=m_pDataCap);
 	m_pDataCap->m_lRecvFrameCnt=0;
 }
-
 
 
 

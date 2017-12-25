@@ -80,7 +80,15 @@ private:
 	cq_int32_t RdFpgaReg(const cq_uint32_t 	iAddr, cq_uint32_t& iValue);
 
 	cq_int32_t OpenUSB(cq_uint32_t usbNum);
-	cq_int32_t CloseUSB();		
+	cq_int32_t CloseUSB();	
+
+	cq_int32_t WrEeprom(const cq_uint32_t iAddr, const cq_uint8_t iValue);
+	cq_int32_t RrEeprom(const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_uint32_t &length);
+	cq_int32_t WrDevID(cq_uint8_t* chIdBuf, cq_uint32_t &length );
+	cq_int32_t RdDevID(cq_uint8_t *chIdBuf, cq_uint32_t &length);
+	cq_int32_t WrDevSN(cq_uint8_t* chSnBuf, cq_uint32_t &length );
+	cq_int32_t RdDevSN(cq_uint8_t *chSnBuf, cq_uint32_t &length);
+
 	cq_int32_t GetUsbSpeed(cq_uint32_t &chSpeedType);
 	cq_int32_t InitSensor();
 
