@@ -81,6 +81,7 @@ private:
 
 	cq_int32_t OpenUSB(cq_uint32_t usbNum);
 	cq_int32_t CloseUSB();	
+	cq_int32_t GetDevCnt(cq_uint32_t& devCnt);
 
 	cq_int32_t WrEeprom(const cq_uint32_t iAddr, const cq_uint8_t iValue);
 	cq_int32_t RrEeprom(const cq_uint32_t iAddr, cq_uint8_t * buffer, cq_uint32_t &length);

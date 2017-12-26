@@ -130,7 +130,11 @@ cq_int32_t CCqUsbCam::CloseUSB()
 	return -1;
 }
 
-
+cq_int32_t CCqUsbCam::GetDevCnt(cq_uint32_t& devCnt)
+{
+	devCnt=m_pUsbHandle->DeviceCount();
+	return 0;
+}
 
 cq_int32_t  CCqUsbCam::InitSensor()
 {

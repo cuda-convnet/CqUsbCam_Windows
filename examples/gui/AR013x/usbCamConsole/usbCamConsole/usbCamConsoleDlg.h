@@ -21,6 +21,7 @@ private:
 	cq_bool_t		m_bIsCamSelected;
 	cq_int64_t      m_lBytePerSecond;
 	CCqUsbCam*		m_sensorInUse;
+	cq_uint32_t		m_iDevCnt;
 
 
 // ππ‘Ï
@@ -94,4 +95,5 @@ public:
 	afx_msg void OnBnClickedRadioResolu1280960();
 	afx_msg void OnBnClickedRadioResolu640480Skip();
 	afx_msg void OnBnClickedRadioResolu640480Bin();
+	afx_msg BOOL OnDeviceChange(UINT nEventType, DWORD dwData );
 };

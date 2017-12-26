@@ -144,6 +144,8 @@ BEGIN_MESSAGE_MAP(CusbCamConsoleDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_RESOLU_1280_960, &CusbCamConsoleDlg::OnBnClickedRadioResolu1280960)
 	ON_BN_CLICKED(IDC_RADIO_RESOLU_640_480_SKIP, &CusbCamConsoleDlg::OnBnClickedRadioResolu640480Skip)
 	ON_BN_CLICKED(IDC_RADIO_RESOLU_640_480_BIN, &CusbCamConsoleDlg::OnBnClickedRadioResolu640480Bin)
+
+	ON_WM_DEVICECHANGE()
 END_MESSAGE_MAP()
 
 
@@ -984,5 +986,28 @@ void CusbCamConsoleDlg::OnBnClickedButtonWrDevSn()
 	cq_uint32_t len=4;
 	m_sensorInUse->WrDevSN(iValue,len);
 	SetDlgItemText(IDC_STATIC_STATUS, L"ÉèÖÃSN³É¹¦¡£");
+}
+
+BOOL CusbCamConsoleDlg::OnDeviceChange( UINT nEventType, DWORD dwData )
+{
+	cq_uint32_t devCnt=0;
+	m_sensorInUse->GetDevCnt(devCnt);
+
+	if(m_iDevCnt>devCnt)
+	{
+
+		m_iDevCnt=devCnt;
+		MessageBox(L"-----");
+		return TRUE;
+	}
+	if(m_iDevCnt<devCnt)
+	{
+		m_iDevCnt=devCnt;
+		MessageBox(L"+++++");
+		return TRUE;
+	}
+
+	m_iDevCnt=devCnt;
+	return TRUE;
 }
 

@@ -142,6 +142,8 @@ BEGIN_MESSAGE_MAP(CusbCamConsoleDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_RD_DEV_SN, &CusbCamConsoleDlg::OnBnClickedButtonRdDevSn)
 	ON_BN_CLICKED(IDC_BUTTON_WR_DEV_SN, &CusbCamConsoleDlg::OnBnClickedButtonWrDevSn)
 	ON_BN_CLICKED(IDC_RADIO_RESOLU_640_480, &CusbCamConsoleDlg::OnBnClickedRadioResolu640480)
+
+	ON_WM_DEVICECHANGE()
 END_MESSAGE_MAP()
 
 
@@ -177,6 +179,7 @@ BOOL CusbCamConsoleDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	m_sensorInUse->GetDevCnt(m_iDevCnt);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -939,3 +942,25 @@ void CusbCamConsoleDlg::OnBnClickedButtonWrDevSn()
 	SetDlgItemText(IDC_STATIC_STATUS, L"设置SN成功。");
 }
 
+BOOL CusbCamConsoleDlg::OnDeviceChange( UINT nEventType, DWORD dwData )
+{
+	cq_uint32_t devCnt=0;
+	m_sensorInUse->GetDevCnt(devCnt);
+
+	if(m_iDevCnt>devCnt)
+	{
+
+		m_iDevCnt=devCnt;
+		MessageBox(L"-----");
+		return TRUE;
+	}
+	if(m_iDevCnt<devCnt)
+	{
+		m_iDevCnt=devCnt;
+		MessageBox(L"+++++");
+		return TRUE;
+	}
+
+	m_iDevCnt=devCnt;
+	return TRUE;
+}

@@ -21,6 +21,7 @@ private:
 	cq_bool_t		m_bIsCamSelected;
 	cq_int64_t      m_lBytePerSecond;
 	CCqUsbCam*		m_sensorInUse;
+	cq_uint32_t		m_iDevCnt;
 
 
 // ππ‘Ï
@@ -91,4 +92,5 @@ public:
 	afx_msg void OnBnClickedButtonWrDevId();
 	afx_msg void OnBnClickedButtonRdDevSn();
 	afx_msg void OnBnClickedButtonWrDevSn();
+	afx_msg BOOL OnDeviceChange(UINT nEventType, DWORD dwData );
 };
