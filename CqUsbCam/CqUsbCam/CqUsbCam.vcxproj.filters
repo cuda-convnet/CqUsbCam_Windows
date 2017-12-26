@@ -57,6 +57,9 @@
     <ClInclude Include="sensors\MT9V034.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SendOrder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -78,6 +81,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="sensors\MT9M001.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SendOrder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

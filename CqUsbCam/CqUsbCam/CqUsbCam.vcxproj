@@ -84,6 +84,7 @@
     <ClInclude Include="DataCapture.h" />
     <ClInclude Include="DataProcess.h" />
     <ClInclude Include="ImgFrame.h" />
+    <ClInclude Include="SendOrder.h" />
     <ClInclude Include="SensorCapbablity.h" />
     <ClInclude Include="sensors\AR0135.h" />
     <ClInclude Include="sensors\MT9V034.h" />
@@ -97,6 +98,9 @@
     <ClCompile Include="CqUsbCam.cpp" />
     <ClCompile Include="DataCapture.cpp" />
     <ClCompile Include="DataProcess.cpp" />
+    <ClCompile Include="SendOrder.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="sensors\AR0135.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

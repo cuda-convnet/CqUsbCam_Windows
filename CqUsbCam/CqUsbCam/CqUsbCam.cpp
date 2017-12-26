@@ -18,6 +18,7 @@
 #include "StdAfx.h"
 
 #include "CqUsbCam.h"
+#include "SendOrder.h"
 #include "Types.h"
 #include "./sensors/AR0135.h"
 #include "./sensors/MT9V034.h"
@@ -208,29 +209,6 @@ cq_int32_t  CCqUsbCam::StopCap()
 	
 	m_bIsCapturing=false;
 	return 0;
-}
-
-static cq_int32_t SendOrder(CCyUSBDevice *pUsbHandle, PUSB_ORDER pOrder )
-{
-	if(pUsbHandle!=NULL&&pUsbHandle->IsOpen())
-	{
-		pUsbHandle->ControlEndPt->Target=(CTL_XFER_TGT_TYPE)pOrder->Target;
-		pUsbHandle->ControlEndPt->ReqType=(CTL_XFER_REQ_TYPE)pOrder->ReqType;
-		pUsbHandle->ControlEndPt->Direction=(CTL_XFER_DIR_TYPE)pOrder->Direction;
-		pUsbHandle->ControlEndPt->ReqCode=pOrder->ReqCode;
-		pUsbHandle->ControlEndPt->Value=pOrder->Value;
-		pUsbHandle->ControlEndPt->Index=pOrder->Index;
-
-		cq_int64_t lBytes=0;
-		lBytes=pOrder->DataBytes;
-		if(pUsbHandle->ControlEndPt->XferData((cq_uint8_t*)(pOrder->pData),lBytes))
-		{
-			pOrder->DataBytes=lBytes;
-			return 0;
-		}
-		pOrder->DataBytes=0;
-	}
-	return -1;
 }
 
 cq_int32_t CCqUsbCam::WrDevID(cq_uint8_t* chIdBuf, cq_uint32_t &length )
