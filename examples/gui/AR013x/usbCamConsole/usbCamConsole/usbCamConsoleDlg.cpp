@@ -96,6 +96,11 @@ CusbCamConsoleDlg::CusbCamConsoleDlg(CWnd* pParent /*=NULL*/)
 
 
 }
+CusbCamConsoleDlg::~CusbCamConsoleDlg()
+{
+	OnBnClickedButtonStopCap();
+
+}
 
 void CusbCamConsoleDlg::DoDataExchange(CDataExchange* pDX)
 {
@@ -146,6 +151,7 @@ BEGIN_MESSAGE_MAP(CusbCamConsoleDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RADIO_RESOLU_640_480_BIN, &CusbCamConsoleDlg::OnBnClickedRadioResolu640480Bin)
 
 	ON_WM_DEVICECHANGE()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -1011,3 +1017,11 @@ BOOL CusbCamConsoleDlg::OnDeviceChange( UINT nEventType, DWORD dwData )
 	return TRUE;
 }
 
+
+
+void CusbCamConsoleDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	OnBnClickedButtonStopCap();
+	CDialogEx::OnClose();
+}

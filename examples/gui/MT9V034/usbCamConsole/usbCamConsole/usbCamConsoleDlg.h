@@ -27,6 +27,7 @@ private:
 // 构造
 public:
 	CusbCamConsoleDlg(CWnd* pParent = NULL);	// 标准构造函数
+	~CusbCamConsoleDlg();
 
 // 对话框数据
 	enum { IDD = IDD_USBCAMCONSOLE_DIALOG };
@@ -94,4 +95,5 @@ public:
 	afx_msg void OnBnClickedButtonWrDevSn();
 	afx_msg void OnBnClickedRadioResolu640480();
 	afx_msg BOOL OnDeviceChange(UINT nEventType, DWORD dwData );
+	afx_msg void OnClose();
 };
