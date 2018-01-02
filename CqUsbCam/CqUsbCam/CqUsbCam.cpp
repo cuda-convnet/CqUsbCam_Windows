@@ -194,18 +194,17 @@ cq_int32_t  CCqUsbCam::StopCap()
 	if(NULL==m_sensorInUse.StopCap)
 		return ERR_NULL_FUNC_POINTER;
 
-	m_sensorInUse.StopCap(m_pUsbHandle);
+	//m_sensorInUse.StopCap(m_pUsbHandle);
 
 	m_pDataProc->Close();//必须保证在停止采集之前停掉处理线程，否则会造成死锁
     m_pDataCap->Close();
+
+	m_sensorInUse.StopCap(m_pUsbHandle);
 	
 
 	if(NULL!=m_pImgQueue)	delete m_pImgQueue;
 	if(NULL!=m_pDataCap)	delete m_pDataCap;
 	if(NULL!=m_pDataProc)	delete m_pDataProc;
-
-
-	
 	
 	m_bIsCapturing=false;
 	return 0;

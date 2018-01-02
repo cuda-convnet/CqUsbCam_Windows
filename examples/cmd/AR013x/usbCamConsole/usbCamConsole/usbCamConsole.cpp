@@ -3,13 +3,14 @@
 
 #include "stdafx.h"
 
+#include<windows.h>  
+#include <Mmsystem.h>  
+#pragma comment(lib, "winmm.lib")  
+
+
 #include "CqUsbCam.h"
 #include "SensorCapbablity.h"
 
-
-#include <cv.hpp>
-#include <opencv.hpp>
-#include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace std;
@@ -84,36 +85,32 @@ cq_uint32_t g_iHeight=720;
 cq_uint8_t	g_byteBitDepthNo=1;
 cq_uint8_t	g_byteResolutionType;
 
+cq_bool_t g_bCap=false;
 
 HANDLE g_mutexDisp;
 HANDLE g_mutexTimer;
-Mat frame(g_iHeight, g_iWidth, CV_8UC1);
+HANDLE g_mutexThread;
 
+Mat frame;
 CCqUsbCam *pCamInUse=new CCqUsbCam(NULL);
 
 unsigned short hex2dec(char *hex)
 
 {
-
 	unsigned short  number=0;
-
 	char *p=hex;
-
 	for(p=hex;*p;++p)
 	{
 		if((hex[p-hex]<='z')&&(hex[p-hex]>='a'))
 			hex[p-hex]=hex[p-hex]-32;
  		number=number*16+(hex[p-hex]>='A'?hex[p-hex]-'A'+10:hex[p-hex]-'0');
 	}
-
 	return number;
-
 }
 
 
 void checkspeed()
 {
-	
 	unsigned int speed = 0;
 	pCamInUse->GetUsbSpeed(speed);
 	if (speed == USB_SPEED_SUPER)
@@ -127,16 +124,63 @@ void checkspeed()
 		pCamInUse->SendUsbSpeed2Fpga(USB_SPEED_HIGH);
 	}
 	else
-	{
 		printf("Unknown USB speed");
-	}
 }
+
+
+void CALLBACK TimeProc(UINT uID,UINT uMsg,DWORD dwUser,DWORD dw1,DWORD dw2)  
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	unsigned long iFrameCntPerSec =0;
+	unsigned long iByteCntPerSec = 0;
+
+	int i = 0, j = 0;
+
+	WaitForSingleObject(g_mutexTimer, INFINITE);
+	pCamInUse->GetRecvByteCnt(iByteCntPerSec);
+	pCamInUse->ClearRecvByteCnt();
+	pCamInUse->GetRecvFrameCnt(iFrameCntPerSec);
+	pCamInUse->ClearRecvFrameCnt();
+	printf("%d Fps     %0.4f MBs\n", iFrameCntPerSec,float(iByteCntPerSec)/1024.0/1024.0);	
+	ReleaseMutex(g_mutexTimer);
+}
+
+
 
 void  Disp(LPVOID lpParam)
 {
 	WaitForSingleObject(g_mutexDisp, INFINITE); 
 	frame.data=(cq_uint8_t*)lpParam;
 	ReleaseMutex(g_mutexDisp);
+}
+
+unsigned int __stdcall ThreadEntry(void* __this)
+{
+	cv::namedWindow("disp",CV_WINDOW_AUTOSIZE | CV_GUI_NORMAL);
+	HWND hWnd = (HWND)cvGetWindowHandle("disp");//获取子窗口的HWND
+	HWND hParentWnd = ::GetParent(hWnd);//获取父窗口HWND。父窗口是我们要用的
+	long style = GetWindowLong(hParentWnd, GWL_STYLE);
+	style &= ~(WS_SYSMENU);
+	SetWindowLong(hParentWnd, GWL_STYLE, style);
+
+
+	while(g_bCap)	
+	{
+		WaitForSingleObject(g_mutexDisp, INFINITE); 
+		imshow("disp", frame);
+		waitKey(1);
+		ReleaseMutex(g_mutexDisp);
+	}
+
+	cv::destroyWindow("disp");
+	cv::waitKey(1);
+	cv::waitKey(1);
+	cv::waitKey(1);
+	cv::waitKey(1);
+
+	printf("destroy window\n");
+
+	return NULL;
 }
 
 
@@ -148,6 +192,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	g_mutexDisp= CreateMutex(NULL, FALSE, NULL);
 	g_mutexTimer = CreateMutex(NULL, FALSE, NULL);
+	//g_mutexThread = CreateMutex(NULL, FALSE, NULL);
 
 	if (pCamInUse->OpenUSB(0)<0)
 	{
@@ -160,30 +205,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("init sensor done\n");
 
 	checkspeed();
-	cv::namedWindow("disp",CV_WINDOW_AUTOSIZE | CV_GUI_NORMAL);
-	pCamInUse->StartCap(g_iHeight, (g_byteBitDepthNo == 1 ? g_iWidth : g_iWidth * 2), Disp);
-	while(1)
-	{
-		WaitForSingleObject(g_mutexDisp, INFINITE); 
-		imshow("disp", frame);
-		waitKey(1);
-		ReleaseMutex(g_mutexDisp);
-	}
-	
-#if 0
-	Mat MyImage=imread("D:/Cq SDK/CqUsbCam_Windows/examples/gui/AR013x/usbCamConsole/Debug/DOTA.jpg");
-	if(!MyImage.data){
-		cout<<"读取不到图片"<<endl;
-		return 0;
-	}
-	namedWindow("小黑");
 
-	imshow("小黑",MyImage);
-	waitKey(0);
-	//return 1;
-#endif
-
-#if 0
 	while(1)
 	{
 		printf("Please input your choice ...\n");
@@ -398,40 +420,24 @@ int _tmain(int argc, _TCHAR* argv[])
 			}		
 			case MAIN_CAPTURE:
 			{
-				cv::namedWindow("disp",CV_WINDOW_AUTOSIZE | CV_GUI_NORMAL);
-				//HWND hWnd = (HWND)cvGetWindowHandle("disp");//获取子窗口的HWND
-				//HWND hParentWnd = ::GetParent(hWnd);//获取父窗口HWND。父窗口是我们要用的
-				//long style = GetWindowLong(hParentWnd, GWL_STYLE);
-				//style &= ~(WS_SYSMENU);
-				//SetWindowLong(hParentWnd, GWL_STYLE, style);
-
+				Mat tempFrame(g_iHeight, g_iWidth, CV_8UC1);
+				frame=tempFrame;
 				pCamInUse->StartCap(g_iHeight, (g_byteBitDepthNo == 1 ? g_iWidth : g_iWidth * 2), Disp);
+				g_bCap=true;
+				Sleep(10);
 
-				//signal(SIGALRM, timerFunction);
-				//alarm(1);
-
-#if 0
-				printf("Press any key to stop capturing\n");
+				HANDLE hThread;
+				hThread = (HANDLE)_beginthreadex(NULL, 0, ThreadEntry, NULL, 0, NULL);
 				
+				int timerID=timeSetEvent( 1000, 0, TimeProc, 0, (UINT)TIME_PERIODIC);  
 
+				printf("Press any key to stop capturing\n");		
 				getchar();
-				printf("getcahr 1\n");
-				getchar();
-				//WaitForSingleObject(g_mutexTimer, INFINITE);
-				//alarm(0);
+				g_bCap=false;
+				timeKillEvent(timerID);
+
 				pCamInUse->StopCap();
 				printf("stop cap\n");
-				//ReleaseMutex(g_mutexTimer);
-				
-				WaitForSingleObject(g_mutexDisp, INFINITE);
-				cv::destroyWindow("disp");
-				cv::waitKey(1);
-				cv::waitKey(1);
-				cv::waitKey(1);
-				cv::waitKey(1);
-				ReleaseMutex(g_mutexDisp);
-				printf("destroy window\n");
-#endif
 				break;
 			}
 			case MAIN_ANALOG_GAIN_AUTO_TRIG:
@@ -564,8 +570,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 
 	}
-#endif
-	while(1);
 	return 0;
 }
 
