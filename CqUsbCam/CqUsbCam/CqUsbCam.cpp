@@ -34,7 +34,6 @@
 #define ERR_IS_CAPTURING		-0x83
 #define ERR_IS_NOT_CAPTURING	-0x84
 
-#define TEST_SelectSensor
 
 CCqUsbCam::CCqUsbCam(HANDLE h)
 {
@@ -53,12 +52,6 @@ CCqUsbCam::CCqUsbCam(HANDLE h)
 
 	m_pUsbHandle=new CCyUSBDevice(h);
 	assert(NULL!=m_pUsbHandle);
-
-#ifdef TEST_SelectSensor
-#else
-	int size=m_sensorList.size();
-	m_sensorInUse=*m_sensorList.begin();
-#endif
 }
 
 CCqUsbCam::~CCqUsbCam()
@@ -81,7 +74,6 @@ cq_int32_t  CCqUsbCam::SelectSensor(string* pStrSensorName)
 {
 	assert(NULL!=pStrSensorName);
 
-#ifdef TEST_SelectSensor
 	list<tagSensor>::iterator i;      
 
 	if(0==m_sensorList.size())
@@ -96,10 +88,7 @@ cq_int32_t  CCqUsbCam::SelectSensor(string* pStrSensorName)
 		}
 	}
 	return -2;
-#else
-	m_sensorInUse=m_sensorList.front();
-	return 0;
-#endif
+
 }
 
 cq_int32_t CCqUsbCam::OpenUSB(cq_uint32_t usbNum)

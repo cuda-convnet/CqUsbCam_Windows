@@ -245,7 +245,6 @@ static cq_int32_t MT9V034_SetExpoValue(CCyUSBDevice *pUsbHandle, const cq_uint32
 {
 	cq_int32_t r=MT9V034_WrSensorReg(pUsbHandle, 0x0b, iExpoVal&0xffff);
 	return r;
-
 }
 
 static cq_int32_t MT9V034_SetGainValue(CCyUSBDevice *pUsbHandle, const cq_uint32_t iGainVal)
