@@ -82,9 +82,7 @@ CusbCamConsoleDlg::CusbCamConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_sensorInUse = new CCqUsbCam(NULL);
 
 	assert(m_sensorInUse);
-	std::string sensorName = "AR0135";
-	m_sensorInUse->SelectSensor(&sensorName);
-	m_bIsCamSelected=true;
+
 
 	g_mutexDisp= CreateMutex(NULL, FALSE, NULL);
 	g_mutexTimer = CreateMutex(NULL, FALSE, NULL);
@@ -251,6 +249,8 @@ void CusbCamConsoleDlg::OnBnClickedButtonOpenUsb()
 		SetDlgItemText(IDC_STATIC_STATUS, L"打开USB失败。");
 		return;
 	}
+	m_bIsCamSelected=true;
+
 	SetDlgItemText(IDC_STATIC_STATUS, L"打开USB成功。");
 	m_bUsbOpen = true;
 }

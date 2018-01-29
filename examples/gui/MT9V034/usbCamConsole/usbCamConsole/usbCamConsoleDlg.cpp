@@ -82,9 +82,7 @@ CusbCamConsoleDlg::CusbCamConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_sensorInUse = new CCqUsbCam(this);
 
 	assert(m_sensorInUse);
-	std::string sensorName = "MT9V034";
-	m_sensorInUse->SelectSensor(&sensorName);
-	m_bIsCamSelected=true;
+
 
 	g_mutexDisp= CreateMutex(NULL, FALSE, NULL);
 	g_mutexTimer = CreateMutex(NULL, FALSE, NULL);
@@ -244,11 +242,15 @@ HCURSOR CusbCamConsoleDlg::OnQueryDragIcon()
 void CusbCamConsoleDlg::OnBnClickedButtonOpenUsb()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
 	if (m_sensorInUse->OpenUSB(0)<0)
 	{
 		SetDlgItemText(IDC_STATIC_STATUS, L"打开USB失败。");
 		return;
 	}
+
+	m_bIsCamSelected=true;
+
 	SetDlgItemText(IDC_STATIC_STATUS, L"打开USB成功。");
 	m_bUsbOpen = true;
 }

@@ -60,6 +60,12 @@
     <ClInclude Include="SendOrder.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="devInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CqUsbCam_API.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -84,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SendOrder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CqUsbCam_API.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

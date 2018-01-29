@@ -45,6 +45,7 @@
 #include "DataCapture.h"
 #include "DataProcess.h"
 #include "tagSensor.h"
+#include "devInfo.h"
 
 
 #define USB_SPEED_SUPER		0x00
@@ -66,7 +67,15 @@ private:
 	cq_bool_t m_bIsInterfaceClaimed; 		
 	cq_bool_t m_bIsCapturing;
 	
-
+	/************************************************************************************************\
+ 	*	name:				SelectSensor
+ 	*	param:				pStrSensorName: 		input .  this param should be the sensor you are using. 
+ 	*																			currently, this dll supports the following sensors, 
+ 	*																			AR013x, MT9V034, MT9M001
+ 	*  return:				
+ 	*	description:		select sensor you want to use
+ 	\************************************************************************************************/	
+	cq_int32_t SelectSensor(string* pStrSensorName);
 
  public:
  	/************************************************************************************************\
@@ -93,16 +102,6 @@ private:
  	*	description:		reset usb endpoints
  	\************************************************************************************************/	
 	cq_bool_t Reset();
-	
-	/************************************************************************************************\
- 	*	name:				SelectSensor
- 	*	param:				pStrSensorName: 		input .  this param should be the sensor you are using. 
- 	*																			currently, this dll supports the following sensors, 
- 	*																			AR013x, MT9V034, MT9M001
- 	*  return:				
- 	*	description:		select sensor you want to use
- 	\************************************************************************************************/	
-	cq_int32_t SelectSensor(string* pStrSensorName);
 
 	/************************************************************************************************\
  	*	name:				WrSensorReg
@@ -160,11 +159,19 @@ private:
 	
 	/************************************************************************************************\
  	*	name:				GetDevCnt
- 	*	param:				devCnt: output. usb device count attached on the bus
+ 	*	param:				devCnt: output. count of usb devices attached on the bus
  	*  return:				0 
  	*	description:		get usb device count attached on the bus
  	\************************************************************************************************/
 	cq_int32_t GetDevCnt(cq_uint32_t& devCnt);
+
+	/************************************************************************************************\
+ 	*	name:				GetDevInfo
+ 	*	param:				devInfo: output. usb device info
+ 	*  return:				0 
+ 	*	description:		get usb device info attached on the bus
+ 	\************************************************************************************************/
+	cq_int32_t GetDevInfo(devInfo_t& devInfo);
 
 
 	/************************************************************************************************\
@@ -378,7 +385,7 @@ private:
 	/************************************************************************************************\
  	*	name:				ClearRecvByteCnt
  	*	param:
- 	*  return:				
+ 	*	return:				
  	*	description:		clear the count of bytes received
  	\************************************************************************************************/
 	void ClearRecvByteCnt();

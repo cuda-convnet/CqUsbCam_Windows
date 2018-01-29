@@ -52,6 +52,8 @@ CCqUsbCam::CCqUsbCam(HANDLE h)
 
 	m_pUsbHandle=new CCyUSBDevice(h);
 	assert(NULL!=m_pUsbHandle);
+
+	//cq_uint8_t devCnt = m_pUsbHandle->DeviceCount();
 }
 
 CCqUsbCam::~CCqUsbCam()
@@ -101,11 +103,44 @@ cq_int32_t CCqUsbCam::OpenUSB(cq_uint32_t usbNum)
 		m_pUsbHandle->ControlEndPt->Value = 0;
 		m_pUsbHandle->ControlEndPt->Index = 0;
 
+
+		devInfo_t devInfo;
+		GetDevInfo(devInfo);
+
+		string strSensorType;
+		string strManufactureName;
+
+		cq_int8_t chSensorType[DEV_INFOR_SENSOR_TYPE_LEN + 1];
+		cq_int8_t chManufactureName[DEV_INFOR_MANUFACTURE_NAME_LEN + 1];
+
+		memset(chSensorType, 0, sizeof(chSensorType));
+		memset(chManufactureName, 0, sizeof(chManufactureName));
+
+		memcpy(chSensorType, devInfo.sensorType, DEV_INFOR_SENSOR_TYPE_LEN);
+		memcpy(chManufactureName, devInfo.manufactureName, DEV_INFOR_MANUFACTURE_NAME_LEN);
+
+		if(strcmp(chManufactureName, "CCHV"))
+			return -1;//非“采起”产品
+				
+		if((!strcmp(chSensorType, "0134"))||(!strcmp(devInfo.sensorType, "0135")))
+			strSensorType = "AR0135";
+		else if(!strcmp(chSensorType, "V034"))
+			strSensorType = "MT9V034";
+		else if(!strcmp(chSensorType, "M001"))
+			strSensorType = "MT9M001";
+		else if(!strcmp(chSensorType, "P001"))
+			strSensorType = "MT9P001";
+		else
+			return -2;//sensor type错误
+
+		if(0 != SelectSensor(&strSensorType))
+			return -3;//不支持该型号sensor
+
 		m_bIsInterfaceClaimed=true;
 
-		return m_pUsbHandle->VendorID;
+		return 0;
 	}
-	return -1;
+	return -4;
 
 }
 
@@ -123,6 +158,18 @@ cq_int32_t CCqUsbCam::CloseUSB()
 cq_int32_t CCqUsbCam::GetDevCnt(cq_uint32_t& devCnt)
 {
 	devCnt=m_pUsbHandle->DeviceCount();
+	return 0;
+}
+cq_int32_t CCqUsbCam::GetDevInfo(devInfo_t& devInfo)
+{
+	USB_ORDER sUsbOrder;
+	sUsbOrder.ReqCode = 0xD1;
+	sUsbOrder.DataBytes = 32;
+	sUsbOrder.pData = (cq_uint8_t*)&devInfo;
+	sUsbOrder.Direction = 1;
+	sUsbOrder.Index = 0;
+	sUsbOrder.Value = 0;
+	SendOrder(m_pUsbHandle, &sUsbOrder);
 	return 0;
 }
 

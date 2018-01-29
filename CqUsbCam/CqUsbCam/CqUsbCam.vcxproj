@@ -80,9 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CqUsbCam.h" />
+    <ClInclude Include="CqUsbCam_API.h" />
     <ClInclude Include="CyAPI.h" />
     <ClInclude Include="DataCapture.h" />
     <ClInclude Include="DataProcess.h" />
+    <ClInclude Include="devInfo.h" />
     <ClInclude Include="ImgFrame.h" />
     <ClInclude Include="SendOrder.h" />
     <ClInclude Include="SensorCapbablity.h" />
@@ -96,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CqUsbCam.cpp" />
+    <ClCompile Include="CqUsbCam_API.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="DataCapture.cpp" />
     <ClCompile Include="DataProcess.cpp" />
     <ClCompile Include="SendOrder.cpp">
