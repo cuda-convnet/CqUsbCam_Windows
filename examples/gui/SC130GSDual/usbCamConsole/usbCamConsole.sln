@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "usbCamConsole", "usbCamConsole\usbCamConsole.vcxproj", "{024EDA3F-1BAE-4418-A674-8087336C92E8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CqUsbCam", "..\..\..\..\CqUsbCam\CqUsbCam\CqUsbCam.vcxproj", "{CA6F1CEA-7BB9-4D3E-8AA0-5EC6C2B2EC1F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{024EDA3F-1BAE-4418-A674-8087336C92E8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{024EDA3F-1BAE-4418-A674-8087336C92E8}.Debug|Win32.Build.0 = Debug|Win32
+		{024EDA3F-1BAE-4418-A674-8087336C92E8}.Release|Win32.ActiveCfg = Release|Win32
+		{024EDA3F-1BAE-4418-A674-8087336C92E8}.Release|Win32.Build.0 = Release|Win32
+		{CA6F1CEA-7BB9-4D3E-8AA0-5EC6C2B2EC1F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CA6F1CEA-7BB9-4D3E-8AA0-5EC6C2B2EC1F}.Debug|Win32.Build.0 = Debug|Win32
+		{CA6F1CEA-7BB9-4D3E-8AA0-5EC6C2B2EC1F}.Release|Win32.ActiveCfg = Release|Win32
+		{CA6F1CEA-7BB9-4D3E-8AA0-5EC6C2B2EC1F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

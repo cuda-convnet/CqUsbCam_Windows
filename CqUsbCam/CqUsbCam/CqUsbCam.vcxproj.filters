@@ -66,6 +66,9 @@
     <ClInclude Include="CqUsbCam_API.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="sensors\SC130GS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +96,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CqUsbCam_API.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sensors\SC130GS.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -23,6 +23,7 @@
 #include "./sensors/AR0135.h"
 #include "./sensors/MT9V034.h"
 #include "./sensors/MT9M001.h"
+#include "./sensors/SC130GS.h"
 #include <assert.h>
 
 
@@ -49,6 +50,7 @@ CCqUsbCam::CCqUsbCam(HANDLE h)
 	RegisterSensor_AR0135(m_sensorList);
 	RegisterSensor_MT9V034(m_sensorList);
 	RegisterSensor_MT9M001(m_sensorList);
+	RegisterSensor_SC130GS(m_sensorList);
 
 	m_pUsbHandle=new CCyUSBDevice(h);
 	assert(NULL!=m_pUsbHandle);
@@ -119,8 +121,8 @@ cq_int32_t CCqUsbCam::OpenUSB(cq_uint32_t usbNum)
 		memcpy(chSensorType, devInfo.sensorType, DEV_INFOR_SENSOR_TYPE_LEN);
 		memcpy(chManufactureName, devInfo.manufactureName, DEV_INFOR_MANUFACTURE_NAME_LEN);
 
-		if(strcmp(chManufactureName, "CCHV"))
-			return -1;//非“采起”产品
+		//if(strcmp(chManufactureName, "CCHV"))
+		//	return -1;//非“采起”产品
 				
 		if((!strcmp(chSensorType, "0134"))||(!strcmp(devInfo.sensorType, "0135")))
 			strSensorType = "AR0135";
@@ -131,7 +133,8 @@ cq_int32_t CCqUsbCam::OpenUSB(cq_uint32_t usbNum)
 		else if(!strcmp(chSensorType, "P001"))
 			strSensorType = "MT9P001";
 		else
-			return -2;//sensor type错误
+			//return -2;//sensor type错误
+			strSensorType = "SC130GS";
 
 		if(0 != SelectSensor(&strSensorType))
 			return -3;//不支持该型号sensor
